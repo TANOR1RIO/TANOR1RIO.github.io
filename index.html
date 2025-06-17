@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои заметки</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Добро пожаловать в ваши заметки!</h1>
+    
+    <div id="note-form" class="form-container">
+        <h2>Добавить новую заметку</h2>
+        <textarea id="new-note-text" maxlength="280" placeholder="Введите вашу заметку (максимум 280 символов)"></textarea>
+        <div class="char-count"><span id="char-remaining">280</span> символов осталось</div>
+        <div id="error-message" class="error">Заметка не может быть пустой!</div>
+        <button id="add-note-btn">Добавить заметку</button>
+    </div>
+    
+    <div id="edit-form" class="form-container">
+        <h2>Редактировать заметку</h2>
+        <textarea id="edit-note-text" maxlength="280"></textarea>
+        <div class="char-count"><span id="edit-char-remaining">280</span> символов осталось</div>
+        <input type="hidden" id="edit-note-id">
+        <button id="save-edit-btn">Сохранить</button>
+        <button id="cancel-edit-btn">Отмена</button>
+    </div>
+    
+    <h2>Ваши заметки</h2>
+    <div id="notes-list"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
