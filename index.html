@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заметки</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Заметки</h1>
+            <p>Краткие записи, не более 280 символов</p>
+        </header>
+
+        <div class="note-form">
+            <textarea id="note-text" placeholder="Введите текст заметки..." maxlength="280"></textarea>
+            <div class="form-footer">
+                <div class="counter"><span id="char-count">0</span>/280</div>
+                <button id="add-note">Добавить</button>
+            </div>
+        </div>
+
+        <div class="notes-list" id="notes-container">
+            <!-- Заметки будут загружаться здесь -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
