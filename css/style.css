@@ -1,0 +1,263 @@
+:root {
+    --vk-blue: #5181B8;
+    --vk-blue-hover: #5B88BD;
+    --vk-gray: #E1E3E6;
+    --vk-text-primary: #000000;
+    --vk-text-secondary: #818C99;
+    --vk-card-bg: #FFFFFF;
+    --vk-bg: #F5F5F5;
+    --vk-error: #E64646;
+    --vk-success: #4BB34B;
+}
+
+body {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--vk-bg);
+    color: var(--vk-text-primary);
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode {
+    --vk-text-primary: #E1E3E6;
+    --vk-text-secondary: #909499;
+    --vk-card-bg: #2C2D2E;
+    --vk-bg: #19191A;
+    --vk-gray: #454647;
+}
+
+.vk-app {
+    max-width: 100%;
+    padding: 12px;
+    min-height: 100vh;
+}
+
+.vk-header {
+    text-align: center;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--vk-gray);
+}
+
+.vk-header h1 {
+    color: var(--vk-text-primary);
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0 0 4px 0;
+}
+
+.vk-header .subtitle {
+    color: var(--vk-text-secondary);
+    font-size: 14px;
+    margin: 0;
+}
+
+.vk-card {
+    background-color: var(--vk-card-bg);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.04);
+    transition: all 0.3s;
+}
+
+.vk-card h2 {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--vk-text-primary);
+}
+
+textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 1px solid var(--vk-gray);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    resize: none;
+    margin-bottom: 12px;
+    background-color: var(--vk-card-bg);
+    color: var(--vk-text-primary);
+    transition: all 0.3s;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--vk-blue);
+    box-shadow: 0 0 0 2px rgba(81, 129, 184, 0.2);
+}
+
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.char-count {
+    color: var(--vk-text-secondary);
+    font-size: 13px;
+    transition: color 0.3s;
+}
+
+.vk-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease-out;
+}
+
+.vk-button--primary {
+    background-color: var(--vk-blue);
+    color: white;
+}
+
+.vk-button--primary:hover {
+    background-color: var(--vk-blue-hover);
+}
+
+.vk-button--secondary {
+    background-color: transparent;
+    color: var(--vk-blue);
+    border: 1px solid var(--vk-blue);
+}
+
+.vk-button--secondary:hover {
+    background-color: rgba(81, 129, 184, 0.1);
+}
+
+.vk-error {
+    color: var(--vk-error);
+    font-size: 13px;
+    margin-top: 8px;
+    display: none;
+}
+
+.notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.note {
+    background-color: var(--vk-card-bg);
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid var(--vk-gray);
+    transition: all 0.3s;
+}
+
+.note:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.note-date {
+    color: var(--vk-text-secondary);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.note-text {
+    margin-bottom: 12px;
+    font-size: 15px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--vk-text-primary);
+}
+
+.note-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.note-action {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.15s ease-out;
+}
+
+.note-action.edit {
+    background-color: transparent;
+    color: var(--vk-blue);
+    border: 1px solid var(--vk-blue);
+}
+
+.note-action.edit:hover {
+    background-color: rgba(81, 129, 184, 0.1);
+}
+
+.note-action.delete {
+    background-color: transparent;
+    color: var(--vk-error);
+    border: 1px solid var(--vk-error);
+}
+
+.note-action.delete:hover {
+    background-color: rgba(230, 70, 70, 0.1);
+}
+
+.vk-empty-state {
+    text-align: center;
+    padding: 24px 16px;
+    color: var(--vk-text-secondary);
+}
+
+.vk-empty-state i {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: var(--vk-gray);
+}
+
+.vk-empty-state p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Адаптация для разных устройств */
+@media (max-width: 600px) {
+    .vk-app {
+        padding: 8px;
+    }
+    
+    .vk-card {
+        padding: 12px;
+    }
+    
+    textarea {
+        min-height: 80px;
+        font-size: 14px;
+    }
+    
+    .vk-button {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+}
