@@ -3,8 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addNoteBtn = document.getElementById('add-note');
     const notesContainer = document.getElementById('notes-container');
     const charCount = document.getElementById('char-count');
-    
-    // Загрузка заметок из localStorage
+
     loadNotes();
     
     // Счетчик символов
