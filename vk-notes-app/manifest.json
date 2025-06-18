@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+  "version": "1.0.0",
+  "name": "Заметки",
+  "short_name": "Заметки",
+  "description": "Приложение для создания коротких заметок",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#45688E",
+  "vk_ui": true,
+  "vk_ui_options": {
+    "action_bar_color": "#45688E",
+    "navigation_bar_color": "#45688E"
+  }
+}

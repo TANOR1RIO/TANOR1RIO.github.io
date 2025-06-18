@@ -1,9 +1,51 @@
+// Инициализация VK Mini App
+vkBridge.send('VKWebAppInit');
+
+// Получение информации о пользователе
+let currentUser = null;
+
+vkBridge.send('VKWebAppGetUserInfo')
+  .then(data => {
+    currentUser = data;
+    console.log('User info:', data);
+  })
+  .catch(error => {
+    console.error('Failed to get user info:', error);
+  });
+
+// Используем VK Storage вместо localStorage
+async function getNotes() {
+  try {
+    const response = await vkBridge.send('VKWebAppStorageGet', {
+      keys: ['notes']
+    });
+    return response.keys[0]?.value ? JSON.parse(response.keys[0].value) : [];
+  } catch (error) {
+    console.error('Failed to get notes:', error);
+    showAlert('Ошибка загрузки заметок');
+    return [];
+  }
+}
+
+async function saveNotes(notes) {
+  try {
+    await vkBridge.send('VKWebAppStorageSet', {
+      key: 'notes',
+      value: JSON.stringify(notes)
+    });
+  } catch (error) {
+    console.error('Failed to save notes:', error);
+    showAlert('Ошибка сохранения заметок');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const noteText = document.getElementById('note-text');
     const addNoteBtn = document.getElementById('add-note');
     const notesContainer = document.getElementById('notes-container');
     const charCount = document.getElementById('char-count');
-
+    
+    // Загрузка заметок
     loadNotes();
     
     // Счетчик символов
@@ -23,6 +65,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const text = noteText.value.trim();
         if (text === '') {
             showAlert('Заметка не может быть пустой');
+            return;
+        }
+        
+        if (text.length > 280) {
+            showAlert('Заметка слишком длинная (макс. 280 символов)');
             return;
         }
         
@@ -52,7 +99,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Функция добавления заметки
-    function addNote(text) {
+    async function addNote(text) {
+        const notes = await getNotes();
         const note = {
             text: text,
             date: new Date().toLocaleString('ru-RU', {
@@ -61,18 +109,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 year: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit'
-            })
+            }),
+            userId: currentUser?.id || null
         };
         
-        let notes = getNotes();
         notes.unshift(note);
-        saveNotes(notes);
+        await saveNotes(notes);
         renderNotes();
     }
     
     // Функция редактирования заметки
-    function editNote(index) {
-        const notes = getNotes();
+    async function editNote(index) {
+        const notes = await getNotes();
         const note = notes[index];
         
         const modal = document.createElement('div');
@@ -108,10 +156,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        saveBtn.addEventListener('click', function() {
+        saveBtn.addEventListener('click', async function() {
             const newText = editTextarea.value.trim();
             if (newText === '') {
                 showAlert('Заметка не может быть пустой');
+                return;
+            }
+            
+            if (newText.length > 280) {
+                showAlert('Заметка слишком длинная (макс. 280 символов)');
                 return;
             }
             
@@ -124,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 minute: '2-digit'
             }) + ' (изменено)';
             
-            saveNotes(notes);
+            await saveNotes(notes);
             renderNotes();
             closeModal(modal);
         });
@@ -154,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Функция удаления заметки
-    function deleteNote(index) {
+    async function deleteNote(index) {
         const confirmModal = document.createElement('div');
         confirmModal.className = 'modal';
         confirmModal.innerHTML = `
@@ -178,34 +231,23 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal(confirmModal);
         });
         
-        confirmBtn.addEventListener('click', function() {
-            let notes = getNotes();
+        confirmBtn.addEventListener('click', async function() {
+            const notes = await getNotes();
             notes.splice(index, 1);
-            saveNotes(notes);
+            await saveNotes(notes);
             renderNotes();
             closeModal(confirmModal);
         });
     }
     
-    // Функция получения всех заметок
-    function getNotes() {
-        const notesJson = localStorage.getItem('notes');
-        return notesJson ? JSON.parse(notesJson) : [];
-    }
-    
-    // Функция сохранения заметок
-    function saveNotes(notes) {
-        localStorage.setItem('notes', JSON.stringify(notes));
-    }
-    
     // Функция загрузки заметок
-    function loadNotes() {
+    async function loadNotes() {
         renderNotes();
     }
     
     // Функция отрисовки заметок
-    function renderNotes() {
-        const notes = getNotes();
+    async function renderNotes() {
+        const notes = await getNotes();
         notesContainer.innerHTML = '';
         
         if (notes.length === 0) {
@@ -245,69 +287,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Добавляем стили для анимаций
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes modalFadeOut {
-            to { opacity: 0; transform: translateY(20px); }
+    // Обработка кнопки "Назад" в VK
+    vkBridge.subscribe((e) => {
+        if (e.detail.type === 'VKWebAppGoBack') {
+            const modals = document.querySelectorAll('.modal');
+            if (modals.length > 0) {
+                modals.forEach(modal => closeModal(modal));
+            } else {
+                vkBridge.send('VKWebAppClose', { status: 'success' });
+            }
         }
-        
-        .alert {
-            position: fixed;
-            top: 1rem;
-            left: 50%;
-            transform: translateX(-50%) translateY(-100px);
-            background: var(--error-color);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.375rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            opacity: 0;
-            transition: all 0.2s ease;
-            z-index: 100;
-            font-size: 0.9rem;
-        }
-        
-        .alert.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-        
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.75rem;
-            margin-top: 1.5rem;
-        }
-        
-        .cancel-btn, .confirm-btn {
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        
-        .cancel-btn {
-            background: white;
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-        }
-        
-        .cancel-btn:hover {
-            background: var(--bg-color);
-        }
-        
-        .confirm-btn {
-            background: var(--error-color);
-            color: white;
-            border: 1px solid var(--error-color);
-        }
-        
-        .confirm-btn:hover {
-            background: #b91c1c;
-        }
-    `;
-    document.head.appendChild(style);
+    });
 });
